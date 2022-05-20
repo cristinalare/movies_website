@@ -105,7 +105,7 @@ html {
 
 h1,
 h2,
-button {
+.search-btn {
     font-family: 'Koulen', cursive;
 }
 
@@ -129,30 +129,13 @@ section {
 }
 
 .movie-section {
-    display: none;
     margin: 3rem 5rem;
-}
-
-/* animation */
-
-header,
-.search-section {
-    transform: translateY(30vh);
-    transition: transform 0.5s ease-out;
-}
-
-.search-section {
-    transition: transform 0.5s ease-in-out;
-}
-
-.main-animation-triggered {
-    transform: translateY(0);
 }
 
 p,
 form,
-option,
-select,
+button,
+ul,
 a {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.25rem;
@@ -161,7 +144,6 @@ a {
 
 button {
     background-color: transparent;
-    background-repeat:no-repeat;
     border: none;    
     cursor: pointer; 
 }
@@ -211,6 +193,41 @@ a:active {
     color: var(--active-purple);
 }
 
+/* initial animation */
+header {
+    opacity: 0;
+    animation: opacity 1s ease-in forwards; /* stay in the animated state (visible) */
+}
+.search-section {
+    opacity: 0;
+    animation: opacity 1s ease-in 0.4s forwards;
+}
+
+@keyframes opacity {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* animation on search */
+
+header,
+.search-section {
+    transform: translateY(25vh);
+    transition: transform 0.6s cubic-bezier(0.79,0.14,0.15,0.86);
+}
+
+.search-section {
+    transition: transform 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);
+}
+
+.main-animation-triggered {
+    transform: translateY(0);
+}
+
 /* search section
 ================== */
 
@@ -223,43 +240,78 @@ a:active {
     align-items: flex-start;
 }
 
-select {
+.dropdown-btn,
+.genres-list {
     background-color: var(--night-color);
     color: var(--purple-color);
     border-radius: 10px;
-    padding-block: 1em;
-    padding-left: 2em;
+    padding: 0.7em 0em;
     width: 20ch;
     outline: none;
-    text-align: left;
+    text-align: center;
     border: 1px solid var(--dark-purple);
 } 
-select:focus {
+
+.dropdown-btn:hover {
+    background-color: var(--dark-sand);
+    color: var(--night-color);
+}
+
+.dropdown-btn:focus {
     border: 1px solid var(--dark-sand);
 }
 
-option:hover {
+.dropdown-icon {
+    padding-left: 0.8em;
+}
+
+.genres-list {
+    height: 30ch;
+    overflow-y: scroll;
+    cursor: default;
+    transition: all 0.5s ease-in;
+    opacity: 1;
+}
+.hidden {
+    height: 0;
+    opacity: 0;
+}
+
+li {
+    transition: all 0.2s ease-in-out;
+}
+
+li:hover {
     background-color: var(--dark-sand);
     color: var(--black-color);
 }
 
-select option:checked {
+/* select option:checked {
     box-shadow: 0 0 10px 100px var(--night-color) inset;
-}
+} */
 
-select::-webkit-scrollbar {
+ul::-webkit-scrollbar {
     width: 12px;
 }
-select::-webkit-scrollbar-track {
+ul::-webkit-scrollbar-track {
     background-color: var(--night-color);
     border-radius: 10px;
 }
-select::-webkit-scrollbar-thumb {
+ul::-webkit-scrollbar-thumb {
     background-color: var(--dark-purple);
     border-radius: 10px;
 }
-select::-webkit-scrollbar-thumb:hover {
+ul::-webkit-scrollbar-thumb:hover {
     background-color: var(--dark-sand);
+}
+
+/* loading
+=========== */
+
+.loading {
+    margin: 7rem auto;
+    text-align: center;
+    display: none;
 }
 
 /* movie section 
@@ -267,6 +319,9 @@ select::-webkit-scrollbar-thumb:hover {
 .movie-section {
     border: 1px solid var(--dark-purple);
     border-radius: 10px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
 }
 .movie-info {
     display: flex;
@@ -284,10 +339,22 @@ select::-webkit-scrollbar-thumb:hover {
     gap: 1.5rem;
 }
 
+.imdb-div {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.imdb-img {
+    width: 3rem;
+    height: 3rem;
+}
+
 .shuffle-btn {
     width: 4rem;
     height: 4rem;
     color: var(--dark-purple);
+    display: none;
 }
 
 @media only screen and (max-width: 950px) {
@@ -295,6 +362,9 @@ select::-webkit-scrollbar-thumb:hover {
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+    .movie-text {
+        align-items: center;
     }
     .movie-img {
         max-height: none;

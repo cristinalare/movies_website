@@ -20,17 +20,28 @@
     </header>
 
     <section class="search-section">
-        <form class="search-form">
+        <!-- <form class="search-form">
             <select name="genres" id="genres" onfocus='this.size=10;' onblur='this.size=0;' onchange='this.size=1; this.blur();'></select>
             <button class="search-btn" type="submit" value="Submit">SEARCH</button>
-        </form>
+        </form> -->
+        <div class="search-form">
+            <div class="genres">
+                <button class="dropdown-btn">
+                    <span class="dropdown-btn-text">Choose a genre</span>
+                    <span class="dropdown-icon"><svg width="15" height="15" version="1.1" viewBox="0 0 32 32"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path clip-rule="evenodd" d="M27,11.106c0-0.564-0.489-1.01-1.044-0.995  H6.013c-0.887-0.024-1.38,1.07-0.742,1.702l9.999,9.9c0.394,0.39,1.031,0.376,1.429,0l9.991-9.892C26.879,11.64,27,11.388,27,11.106  z M15.984,19.591L8.418,12.1H23.55L15.984,19.591z" fill="currentColor" fill-rule="evenodd"/></svg></span>
+                </button>
+                <ul class="genres-list hidden"></ul>
+            </div>
+            <button class="search-btn">SEARCH</button>
+        </div>
     </section>
-
+    <div class="loading"><img src="./assets/loading.svg" alt="loading animation" width="100" height="100">
+    </div>
     <section class="movie-section">
         <div class="movie-info">
             <div class="movie-img"></div>
             <div class="movie-text"></div>
-            <button class="shuffle-btn" hidden><svg width="58" height="58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            <button class="shuffle-btn"><svg width="58" height="58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 58 58" style="enable-background:new 0 0 58 58;" xml:space="preserve">
                 <circle fill="currentColor" cx="29" cy="29" r="29"/>
                 <g fill="#0e0233"><path d="M12,43c-1.104,0-2-0.896-2-2s0.896-2,2-2c5.514,0,10-4.486,10-10c0-1.104,0.896-2,2-2s2,0.896,2,2C26,36.72,19.72,43,12,43z"/><path d="M24,31c-1.104,0-2-0.896-2-2c0-7.72,6.28-14,14-14h10c1.104,0,2,0.896,2,2s-0.896,2-2,2H36c-5.514,0-10,4.486-10,10C26,30.104,25.104,31,24,31z"/><path d="M46,43H36c-3.416,0-6.706-1.242-9.263-3.498c-0.828-0.731-0.907-1.995-0.177-2.823s1.996-0.907,2.823-0.177C31.209,38.113,33.56,39,36,39h10c1.104,0,2,0.896,2,2S47.104,43,46,43z"/><path d="M20.002,22.054c-0.475,0-0.951-0.168-1.333-0.51C16.836,19.903,14.467,19,12,19h-2c-1.104,0-2-0.896-2-2s0.896-2,2-2h2c3.452,0,6.769,1.266,9.337,3.563c0.822,0.736,0.893,2.001,0.156,2.824C21.099,21.829,20.552,22.054,20.002,22.054z"/><path d="M12,43h-2c-1.104,0-2-0.896-2-2s0.896-2,2-2h2c1.104,0,2,0.896,2,2S13.104,43,12,43z"/><path d="M36.002,27c-0.618,0-1.228-0.285-1.619-0.823c-0.65-0.894-0.452-2.145,0.44-2.794L43.6,17l-8.776-6.383c-0.893-0.649-1.091-1.9-0.44-2.794c0.648-0.892,1.899-1.092,2.794-0.44L50.4,17l-13.224,9.617C36.821,26.876,36.409,27,36.002,27z"/><path d="M36.002,51c-0.618,0-1.228-0.285-1.619-0.823c-0.65-0.894-0.452-2.145,0.44-2.794L43.6,41l-8.776-6.383c-0.893-0.649-1.091-1.9-0.44-2.794c0.648-0.893,1.899-1.091,2.794-0.44L50.4,41l-13.224,9.617C36.821,50.876,36.409,51,36.002,51z"/></g></svg>

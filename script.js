@@ -1,6 +1,35 @@
 const tmdbKey = '9a482308981f947cef616bb16658fa83';
 const tmdbBaseUrl = 'https://api.themoviedb.org/3';
 const searchBtn = document.querySelector('.search-btn');
+const dropdownBtn = document.querySelector('.dropdown-btn');
+const loading = document.querySelector('.loading');
+const btnDiv = document.querySelector('.shuffle-btn');
+const movieSection = document.querySelector('.movie-section');
+const shuffleBtn = document.querySelector('.shuffle-btn');
+
+const movieAnimation = () => {
+  setTimeout(() => {
+    movieSection.style.opacity = '1';
+  }, 10);
+}
+
+const removeMovieAnimation = () => {
+  movieSection.style.opacity = '0';
+}
+
+const showElement = (elem) => {
+  elem.style.display = 'block';
+}
+
+const hideElement = (elem) => {
+  elem.style.display = 'none';
+}
+
+
+const handleDropdownToggle = () => {
+  const genresList = document.querySelector('.genres-list');
+  genresList.classList.toggle('hidden');
+}
 
 const getGenres = async () => {
     const genreRequestEndpoint = '/genre/movie/list';
@@ -19,19 +48,28 @@ const getGenres = async () => {
 };
 
 const populateGenreDropdown = (genres) => {
-    const select = document.getElementById('genres');
+    const dropdownList = document.querySelector('.genres-list');
 
     for (const genre of genres) {
-        let option = document.createElement("option");
-        option.value = genre.id;
-        option.text = genre.name;
-        select.appendChild(option);
+        let li = document.createElement("li");
+        li.id = genre.id;
+        li.innerHTML = genre.name;
+        dropdownList.appendChild(li);
+        li.addEventListener('click', handleSelectGenre);
     }
 };
 
+const handleSelectGenre = (event) => {
+  const dropdownBtn = document.querySelector('.dropdown-btn-text');
+  const li = event.target.innerHTML;
+  const liId = event.target.id;
+  dropdownBtn.innerHTML = li;
+  dropdownBtn.id = liId;
+  handleDropdownToggle();
+}
+
 const getSelectedGenre = () => {
-    const selectedGenre = document.getElementById('genres').value;
-    console.log(selectedGenre);
+    const selectedGenre = document.querySelector('.dropdown-btn-text').id;
     return selectedGenre;
 };
 
@@ -131,29 +169,27 @@ const createMovieTime = (time) => {
 }
 
 const createImdbLink = (imdb) => {
+    const imdbImg = document.createElement('img');
+    imdbImg.src = './assets/imdb.svg';
+    imdbImg.setAttribute('class', 'imdb-img');
+
     const movieImdb = document.createElement('a');
     movieImdb.setAttribute('id', 'movieImdb');
     movieImdb.innerHTML = `See on IMBb`;
     const imdbLink = `https://www.imdb.com/title/${imdb}`;
     movieImdb.href = imdbLink;
-    return movieImdb;
+
+    const imdbDiv = document.createElement('div');
+    imdbDiv.className = 'imdb-div';
+    imdbDiv.appendChild(imdbImg);
+    imdbDiv.appendChild(movieImdb);
+
+    return imdbDiv;
 }
 
-const showBtn = () => {
-    const btnDiv = document.querySelector('.shuffle-btn');
-    btnDiv.removeAttribute('hidden');
-};
-
-const shuffleMovie = () => {
-    clearCurrentMovie();
-    showRandomMovie();
-};
-
 const displayMovie = (movieInfo) => {
-  const movieContainer = document.querySelector('.movie-section');
     const moviePosterDiv = document.querySelector('.movie-img');
     const movieTextDiv = document.querySelector('.movie-text');
-    const shuffleBtn = document.querySelector('.shuffle-btn');
   
     const moviePoster = createMoviePoster(movieInfo.poster_path);
     const titleHeader = createMovieTitle(movieInfo.title);
@@ -171,26 +207,18 @@ const displayMovie = (movieInfo) => {
     movieTextDiv.appendChild(overviewText);
     movieTextDiv.appendChild(movieImdb);
   
-    movieContainer.style.display = 'block';
-    showBtn();
-    shuffleBtn.onclick = shuffleMovie;
+    showElement(btnDiv);
 };
 
 const showRandomMovie = async () => {
-    const movieInfo = document.querySelector('.movie-info');
-    if (movieInfo.childNodes.length > 0) {
-      clearCurrentMovie();
-    };
-    const movies = await getMovies();
-    const randomMovie = getRandomMovie(movies);
-    const info = await getMovieInfo(randomMovie);
-    displayMovie(info);
+  const movies = await getMovies();
+  const randomMovie = getRandomMovie(movies);
+  const info = await getMovieInfo(randomMovie);
+  displayMovie(info);
+  hideElement(loading);
+  showElement(movieSection);
+  movieAnimation();
 };
-  
-var form = document.querySelector('.search-form');
-function handleForm(event) { 
-    event.preventDefault(); 
-} 
 
 const handleAnimation = () => {
   const header = document.querySelector('header');
@@ -200,14 +228,32 @@ const handleAnimation = () => {
 }
 
 const searchHandler = () => {
-  handleAnimation();
-  setTimeout(showRandomMovie, 400);
+  const dropdownBtn = document.querySelector('.dropdown-btn-text');
+  const movieInfo = document.querySelector('.movie-info');
+
+  if (movieInfo.childNodes.length > 0) {
+      hideElement(movieSection);
+      removeMovieAnimation();
+      clearCurrentMovie();
+      hideElement(btnDiv);
+  };
+
+  if (dropdownBtn.id) {
+    showElement(loading);
+    handleAnimation();
+    setTimeout(showRandomMovie, 400);
+  }
 }
 
 getGenres().then(populateGenreDropdown);
-form.addEventListener('submit', handleForm);
-// searchBtn.onclick = showRandomMovie;
-// searchBtn.onclick = handleAnimation;
+dropdownBtn.addEventListener('click', handleDropdownToggle);
 searchBtn.addEventListener('click', searchHandler);
+shuffleBtn.addEventListener('click', searchHandler);
 
-
+document.addEventListener("keypress", (event) => {
+  const dropdownBtn = document.querySelector('.dropdown-btn-text');
+  if ((event.key === 'Enter' || event.key === 'NumpadEnter') && (dropdownBtn.id)) {
+    event.preventDefault();
+    searchHandler();
+  }
+});
