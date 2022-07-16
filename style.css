@@ -331,6 +331,8 @@ ul::-webkit-scrollbar-thumb:hover {
 .movie-img {
     max-height: 100vh;
     max-width: 70vw;
+    opacity: 0;
+    transition: opacity 0.7s ease-in;
 }
 
 .movie-text {

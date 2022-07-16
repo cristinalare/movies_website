@@ -5,16 +5,19 @@ const dropdownBtn = document.querySelector('.dropdown-btn');
 const loading = document.querySelector('.loading');
 const btnDiv = document.querySelector('.shuffle-btn');
 const movieSection = document.querySelector('.movie-section');
+const movieImg = document.querySelector('.movie-img');
 const shuffleBtn = document.querySelector('.shuffle-btn');
 
 const movieAnimation = () => {
   setTimeout(() => {
     movieSection.style.opacity = '1';
+    movieImg.style.opacity = '1';
   }, 10);
 }
 
 const removeMovieAnimation = () => {
   movieSection.style.opacity = '0';
+  movieImg.style.opacity = '0';
 }
 
 const showElement = (elem) => {
@@ -73,25 +76,35 @@ const getSelectedGenre = () => {
     return selectedGenre;
 };
 
-const getMovies = async () => {
+const getMovies = async (page) => {
     const selectedGenre = getSelectedGenre();
     const discoverMovieEndpoint = '/discover/movie';
-    const requestParams = `?api_key=${tmdbKey}&with_genres=${selectedGenre}`;
+    const requestParams = `?api_key=${tmdbKey}&with_genres=${selectedGenre}&page=${page}`;
     const urlToFetch = `${tmdbBaseUrl}${discoverMovieEndpoint}${requestParams}`;
   
     try {
       const response = await fetch(urlToFetch);
       if (response.ok) {
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
         const movies = jsonResponse.results;
-        console.log(movies);
         return movies;
       }
     } catch(error) {
       console.log(error);
     }
   };
+
+  const getMoviesFrom10Pages = async () => {
+    let allMoviesArray = [];
+    for (let i=1; i<=10; i++) {
+      const moviesArray = await getMovies(i);
+      if (moviesArray) {
+        allMoviesArray = allMoviesArray.concat(moviesArray);
+      } else return allMoviesArray;
+    }
+
+    return allMoviesArray;
+  }
   
   const getMovieInfo = async movie => {
     const movieId = movie.id;
@@ -211,7 +224,7 @@ const displayMovie = (movieInfo) => {
 };
 
 const showRandomMovie = async () => {
-  const movies = await getMovies();
+  const movies = await getMoviesFrom10Pages();
   const randomMovie = getRandomMovie(movies);
   const info = await getMovieInfo(randomMovie);
   displayMovie(info);
@@ -257,3 +270,14 @@ document.addEventListener("keypress", (event) => {
     searchHandler();
   }
 });
+
+// create absolute positioned inline movie-container divs, inside another div which contains the arrows as well.
+// height 100%, overflow hidden
+// put next/previous arrows
+// every new search appends a new div to the array
+// array has max 10 items - remove first item when reaching the limit 
+// previous arrow goes to the previous movie div
+// next arrow goes to the next movie div
+
+// disable next arrow for the last item of the array (array[array.length-1])
+// disable previous arrow for the first item of the array (array[0]); / index = 0
